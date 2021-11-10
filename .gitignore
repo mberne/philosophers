@@ -1,0 +1,6 @@
+# Perso
+.vscode
+philo
+obj
+*.o
+*.a

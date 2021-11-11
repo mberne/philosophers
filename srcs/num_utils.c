@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   num_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 16:38:59 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/10 19:19:34 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/11 18:17:43 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ char	*ft_itoa(int n)
 
 	i = n;
 	j = ft_intlen(n) - 1;
-	result = malloc(sizeof(char) * (ft_intlen(i) + 1));
+	result = ft_calloc(ft_intlen(i) + 1, sizeof(char));
 	if (!result)
-		return (0);
+		return (NULL);
 	if (i < 0)
 	{
 		result[0] = '-';
@@ -91,26 +91,4 @@ int	str_isnumber(char *s)
 		s++;
 	}
 	return (1);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
-}
-
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	size_t	i;
-
-	i = 0;
-	while (s1[i] && (s1[i] == s2[i]))
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

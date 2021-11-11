@@ -6,7 +6,7 @@
 #    By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/10 15:30:20 by mberne            #+#    #+#              #
-#    Updated: 2021/11/10 16:39:24 by mberne           ###   ########lyon.fr    #
+#    Updated: 2021/11/11 18:49:20 by mberne           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,10 @@ PATH_INC	=	include/
 
 #~~~~ Sources ~~~~#
  
-SRCS		=	main.c	\
-				utils.c	\
+SRCS		=	main.c			\
+				routine.c		\
+				num_utils.c		\
+				str_utils.c		\
 
 #~~~~ Objects ~~~~#
 

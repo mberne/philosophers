@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 16:38:59 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/11 18:17:43 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/12 17:00:47 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,15 +80,4 @@ int	ft_atoi(const char *str)
 		len++;
 	}
 	return (nb * n);
-}
-
-int	str_isnumber(char *s)
-{
-	while (*s)
-	{
-		if (!('0' <= *s && *s <= '9'))
-			return (0);
-		s++;
-	}
-	return (1);
 }

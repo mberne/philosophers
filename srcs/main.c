@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:26:02 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/12 18:34:50 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/12 18:36:46 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	create_philo(t_structs *s)
 	}
 }
 
-void	init_mutex(t_structs *s)
+void	create_mutex(t_structs *s)
 {
 	int	i;
 
@@ -119,7 +119,7 @@ int	main(int ac, char **av)
 		free_struct(&s);
 		return (-1);
 	}
-	init_mutex(&s);
+	create_mutex(&s);
 	create_philo(&s);
 	free_struct(&s);
 	return (0);

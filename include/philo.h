@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:19:07 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/12 18:11:52 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/12 18:36:29 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_structs	t_structs;
 int		main(int ac, char **av);
 int		check_args(int ac, char **av);
 int		init_struct(t_structs *s, char **av);
+void	create_mutex(t_structs *s);
 void	create_philo(t_structs *s);
 void	free_struct(t_structs *s);
 

@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:26:02 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/14 19:22:03 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/14 19:28:06 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,12 @@ int	init_struct(t_structs *s, char **av)
 	return (0);
 }
 
-int	check_args(int ac, char **av)
+int	check_args(char **av)
 {
 	size_t	i;
 	char	*tmp;
 	int		int_tmp;
 
-	if (ac < 5 || ac > 6)
-		return (-1);
 	i = 1;
 	while (av[i])
 	{
@@ -113,7 +111,9 @@ int	main(int ac, char **av)
 {
 	t_structs	s;
 
-	if (check_args(ac, av) == -1 || init_struct(&s, av) == -1)
+	if (ac < 5 || ac > 6)
+		return (-1);
+	if (check_args(av) == -1 || init_struct(&s, av) == -1)
 	{
 		free_struct(&s);
 		return (-1);

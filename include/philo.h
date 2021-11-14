@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:19:07 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/14 19:49:34 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/14 19:58:43 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ int		check_args(char **av);
 int		init_struct(t_structs *s, char **av);
 void	create_mutex_init_philo(t_structs *s, char **av);
 void	create_philo(t_structs *s);
-void	free_struct(t_structs *s);
 
 //routine.c
 void	*routine(void *arg);
@@ -85,5 +84,6 @@ int		ft_atoi(const char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 void	*ft_calloc(size_t count, size_t size);
 int		str_isnumber(char *s);
+void	free_struct(t_structs *s);
 
 #endif

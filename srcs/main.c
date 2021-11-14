@@ -6,26 +6,11 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:26:02 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/14 19:49:38 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/14 19:58:59 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	free_struct(t_structs *s)
-{
-	int	i;
-
-	i = 0;
-	while (i < s->num_philo)
-	{
-		pthread_mutex_destroy(&s->fork[i]);
-		pthread_mutex_destroy(&s->philo[i].meal_protect);
-		i++;
-	}
-	free(s->fork);
-	free(s->philo);
-}
 
 void	create_philo(t_structs *s)
 {
@@ -52,13 +37,13 @@ void	create_mutex_init_philo(t_structs *s, char **av)
 	while (i < s->num_philo)
 	{
 		pthread_mutex_init(&s->fork[i], NULL);
-		pthread_mutex_init(&s->philo[i].meal_protect, NULL);
 		s->philo[i].index = i + 1;
-		s->philo[i].s = s;
 		if (av[5])
 			s->philo[i].num_eat = ft_atoi(av[5]);
 		else
 			s->philo[i].num_eat = INT32_MAX;
+		pthread_mutex_init(&s->philo[i].meal_protect, NULL);
+		s->philo[i].s = s;
 		i++;
 	}
 	pthread_mutex_init(&s->speak, NULL);
@@ -73,9 +58,9 @@ int	init_struct(t_structs *s, char **av)
 	if (s->num_philo == 0 || s->time_to_die == 0 || s->time_to_eat == 0
 		|| s->time_to_sleep == 0)
 		return (-1);
+	gettimeofday(&s->now, NULL);
 	s->philo = ft_calloc(sizeof(t_philo), s->num_philo);
 	s->fork = ft_calloc(sizeof(pthread_mutex_t), s->num_philo);
-	gettimeofday(&s->now, NULL);
 	if (!s->philo || !s->fork)
 		return (-1);
 	s->wait_threads = 0;

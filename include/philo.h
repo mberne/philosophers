@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:19:07 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/12 18:36:29 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/14 19:02:46 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ typedef struct s_philo
 {
 	pthread_t			identifier;
 	int					index;
-	int					start;
+	struct timeval		last_meal;
+	pthread_mutex_t		meal_protect;
 	struct s_structs	*s;
 }						t_philo;
 

@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:26:02 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/12 18:36:46 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/14 19:22:03 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	free_struct(t_structs *s)
 	while (i < s->num_philo)
 	{
 		pthread_mutex_destroy(&s->fork[i]);
+		pthread_mutex_destroy(&s->philo[i].meal_protect);
 		i++;
 	}
 	free(s->fork);
@@ -35,16 +36,12 @@ void	create_philo(t_structs *s)
 	{
 		pthread_create(&s->philo[i].identifier, NULL, &routine, &s->philo[i]);
 		i++;
-		s->wait_threads++;
 	}
 	gettimeofday(&s->beginning, NULL);
+	gettimeofday(&s->now, NULL);
+	s->wait_threads++;
+	usleep(100);
 	wait_death(s);
-	i = 0;
-	while (i < s->num_philo)
-	{
-		pthread_join(s->philo[i].identifier, NULL);
-		i++;
-	}
 }
 
 void	create_mutex(t_structs *s)
@@ -55,6 +52,7 @@ void	create_mutex(t_structs *s)
 	while (i < s->num_philo)
 	{
 		pthread_mutex_init(&s->fork[i], NULL);
+		pthread_mutex_init(&s->philo[i].meal_protect, NULL);
 		s->philo[i].index = i + 1;
 		s->philo[i].s = s;
 		i++;
@@ -77,6 +75,7 @@ int	init_struct(t_structs *s, char **av)
 		return (-1);
 	s->philo = ft_calloc(sizeof(t_philo), s->num_philo);
 	s->fork = ft_calloc(sizeof(pthread_mutex_t), s->num_philo);
+	gettimeofday(&s->now, NULL);
 	if (!s->philo || !s->fork)
 		return (-1);
 	s->wait_threads = 0;
@@ -121,6 +120,7 @@ int	main(int ac, char **av)
 	}
 	create_mutex(&s);
 	create_philo(&s);
+	usleep((s.time_to_eat + s.time_to_sleep) * 1000);
 	free_struct(&s);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:19:07 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/14 19:28:13 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/14 19:49:34 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
-
 
 /*** ~~ STRUCTURES ~~ ***/
 
@@ -38,6 +37,7 @@ typedef struct s_philo
 {
 	pthread_t			identifier;
 	int					index;
+	int					num_eat;
 	struct timeval		last_meal;
 	pthread_mutex_t		meal_protect;
 	struct s_structs	*s;
@@ -49,7 +49,6 @@ struct s_structs
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
-	int				num_eat;
 	struct timeval	beginning;
 	struct timeval	now;
 	t_philo			*philo;
@@ -67,7 +66,7 @@ typedef struct s_structs	t_structs;
 int		main(int ac, char **av);
 int		check_args(char **av);
 int		init_struct(t_structs *s, char **av);
-void	create_mutex(t_structs *s);
+void	create_mutex_init_philo(t_structs *s, char **av);
 void	create_philo(t_structs *s);
 void	free_struct(t_structs *s);
 

@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:26:02 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/14 19:28:06 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/14 19:49:38 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	create_philo(t_structs *s)
 	wait_death(s);
 }
 
-void	create_mutex(t_structs *s)
+void	create_mutex_init_philo(t_structs *s, char **av)
 {
 	int	i;
 
@@ -55,6 +55,10 @@ void	create_mutex(t_structs *s)
 		pthread_mutex_init(&s->philo[i].meal_protect, NULL);
 		s->philo[i].index = i + 1;
 		s->philo[i].s = s;
+		if (av[5])
+			s->philo[i].num_eat = ft_atoi(av[5]);
+		else
+			s->philo[i].num_eat = INT32_MAX;
 		i++;
 	}
 	pthread_mutex_init(&s->speak, NULL);
@@ -66,12 +70,8 @@ int	init_struct(t_structs *s, char **av)
 	s->time_to_die = ft_atoi(av[2]);
 	s->time_to_eat = ft_atoi(av[3]);
 	s->time_to_sleep = ft_atoi(av[4]);
-	if (av[5])
-		s->num_eat = ft_atoi(av[5]);
-	else
-		s->num_eat = INT32_MAX;
 	if (s->num_philo == 0 || s->time_to_die == 0 || s->time_to_eat == 0
-		|| s->time_to_sleep == 0 || s->num_eat == 0)
+		|| s->time_to_sleep == 0)
 		return (-1);
 	s->philo = ft_calloc(sizeof(t_philo), s->num_philo);
 	s->fork = ft_calloc(sizeof(pthread_mutex_t), s->num_philo);
@@ -118,7 +118,7 @@ int	main(int ac, char **av)
 		free_struct(&s);
 		return (-1);
 	}
-	create_mutex(&s);
+	create_mutex_init_philo(&s, av);
 	create_philo(&s);
 	usleep((s.time_to_eat + s.time_to_sleep) * 1000);
 	free_struct(&s);

@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:47:04 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/14 19:54:49 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/17 16:50:37 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,44 +77,46 @@ void	wait_action(t_structs *s, int philo, t_action action, int action_time)
 	gettimeofday(&start_time, NULL);
 	while (actual_time < action_time && !s->death)
 	{
-		usleep(10);
+		usleep(100);
 		actual_time = (s->now.tv_sec * 1000 - start_time.tv_sec * 1000);
 		actual_time += (s->now.tv_usec / 1000 - start_time.tv_usec / 1000);
 	}
 }
 
-void	synchro_threads(t_philo *philo)
+int	synchro_threads_and_find_fork(t_philo *philo)
 {
 	while (!philo->s->wait_threads)
 		usleep(20);
 	gettimeofday(&philo->last_meal, NULL);
 	if (philo->index % 2 == 0)
 		usleep(2000);
+	if (philo->index == philo->s->num_philo)
+		return (0);
+	else
+		return (philo->index);
 }
 
 void	*routine(void *arg)
 {
 	t_philo	*philo;
-	int		index_second_fork;
+	int		second_fork;
 
 	philo = (t_philo *)arg;
-	if (philo->index == philo->s->num_philo)
-		index_second_fork = 0;
-	else
-		index_second_fork = philo->index;
-	synchro_threads(philo);
+	second_fork = synchro_threads_and_find_fork(philo);
 	while (!philo->s->death && philo->num_eat > 0)
 	{
 		pthread_mutex_lock(&philo->s->fork[philo->index - 1]);
 		print_status(philo->s, philo->index, TAKE_FORK);
-		pthread_mutex_lock(&philo->s->fork[index_second_fork]);
+		if (&philo->s->fork[philo->index - 1] == &philo->s->fork[second_fork])
+			break ;
+		pthread_mutex_lock(&philo->s->fork[second_fork]);
 		print_status(philo->s, philo->index, TAKE_FORK);
 		pthread_mutex_lock(&philo->meal_protect);
 		gettimeofday(&philo->last_meal, NULL);
 		pthread_mutex_unlock(&philo->meal_protect);
 		wait_action(philo->s, philo->index, EAT, philo->s->time_to_eat);
 		pthread_mutex_unlock(&philo->s->fork[philo->index - 1]);
-		pthread_mutex_unlock(&philo->s->fork[index_second_fork]);
+		pthread_mutex_unlock(&philo->s->fork[second_fork]);
 		wait_action(philo->s, philo->index, SLEEP, philo->s->time_to_sleep);
 		print_status(philo->s, philo->index, THINK);
 		philo->num_eat--;

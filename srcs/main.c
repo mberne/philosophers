@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:26:02 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/14 19:58:59 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/17 16:24:21 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,15 @@ void	create_philo(t_structs *s)
 	}
 	gettimeofday(&s->beginning, NULL);
 	gettimeofday(&s->now, NULL);
-	s->wait_threads++;
+	s->wait_threads = 1;
 	usleep(100);
 	wait_death(s);
+	i = 0;
+	while (i < s->num_philo)
+	{
+		pthread_join(s->philo[i].identifier, NULL);
+		i++;
+	}
 }
 
 void	create_mutex_init_philo(t_structs *s, char **av)
@@ -68,25 +74,17 @@ int	init_struct(t_structs *s, char **av)
 	return (0);
 }
 
-int	check_args(char **av)
+int	check_args(int ac, char **av)
 {
 	size_t	i;
-	char	*tmp;
-	int		int_tmp;
 
+	if (ac < 5 || ac > 6)
+		return (-1);
 	i = 1;
 	while (av[i])
 	{
 		if (!str_isnumber(av[i]))
 			return (-1);
-		int_tmp = ft_atoi(av[i]);
-		tmp = ft_itoa(int_tmp);
-		if (!tmp || (tmp && ft_strcmp(av[i], tmp)))
-		{
-			free(tmp);
-			return (-1);
-		}
-		free(tmp);
 		i++;
 	}
 	return (0);
@@ -96,16 +94,15 @@ int	main(int ac, char **av)
 {
 	t_structs	s;
 
-	if (ac < 5 || ac > 6)
+	if (check_args(ac, av) == -1)
 		return (-1);
-	if (check_args(av) == -1 || init_struct(&s, av) == -1)
+	if (init_struct(&s, av) == -1)
 	{
 		free_struct(&s);
 		return (-1);
 	}
 	create_mutex_init_philo(&s, av);
 	create_philo(&s);
-	usleep((s.time_to_eat + s.time_to_sleep) * 1000);
 	free_struct(&s);
 	return (0);
 }

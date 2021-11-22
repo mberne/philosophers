@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 17:40:13 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/14 19:58:36 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/22 16:15:07 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,4 @@ int	str_isnumber(char *s)
 		s++;
 	}
 	return (1);
-}
-
-void	free_struct(t_structs *s)
-{
-	int	i;
-
-	i = 0;
-	while (i < s->num_philo)
-	{
-		pthread_mutex_destroy(&s->fork[i]);
-		pthread_mutex_destroy(&s->philo[i].meal_protect);
-		i++;
-	}
-	free(s->fork);
-	free(s->philo);
 }

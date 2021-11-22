@@ -6,20 +6,36 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:26:02 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/17 16:24:21 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/22 16:58:54 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	create_philo(t_structs *s)
+void	free_struct(t_structs *s)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (i < s->num_philo)
 	{
-		pthread_create(&s->philo[i].identifier, NULL, &routine, &s->philo[i]);
+		pthread_mutex_destroy(&s->fork[i]);
+		pthread_mutex_destroy(&s->philo[i].meal_protect);
+		i++;
+	}
+	free(s->fork);
+	free(s->philo);
+}
+
+int	create_philo(t_structs *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < s->num_philo)
+	{
+		if (pthread_create(&s->philo[i].id, NULL, &routine, &s->philo[i]) > 0)
+			return (-1);
 		i++;
 	}
 	gettimeofday(&s->beginning, NULL);
@@ -30,24 +46,24 @@ void	create_philo(t_structs *s)
 	i = 0;
 	while (i < s->num_philo)
 	{
-		pthread_join(s->philo[i].identifier, NULL);
+		if (pthread_join(s->philo[i].id, NULL) > 0)
+			return (-1);
 		i++;
 	}
+	return (0);
 }
 
-void	create_mutex_init_philo(t_structs *s, char **av)
+void	create_mutex_init_philo(t_structs *s)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (i < s->num_philo)
 	{
 		pthread_mutex_init(&s->fork[i], NULL);
 		s->philo[i].index = i + 1;
-		if (av[5])
-			s->philo[i].num_eat = ft_atoi(av[5]);
-		else
-			s->philo[i].num_eat = INT32_MAX;
+		s->philo[i].stop = 0;
+		s->philo[i].dinner = 0;
 		pthread_mutex_init(&s->philo[i].meal_protect, NULL);
 		s->philo[i].s = s;
 		i++;
@@ -61,8 +77,12 @@ int	init_struct(t_structs *s, char **av)
 	s->time_to_die = ft_atoi(av[2]);
 	s->time_to_eat = ft_atoi(av[3]);
 	s->time_to_sleep = ft_atoi(av[4]);
+	if (av[5])
+		s->num_eat = ft_atoi(av[5]);
+	else
+		s->num_eat = INT32_MAX;
 	if (s->num_philo == 0 || s->time_to_die == 0 || s->time_to_eat == 0
-		|| s->time_to_sleep == 0)
+		|| s->time_to_sleep == 0 || s->num_eat == 0)
 		return (-1);
 	gettimeofday(&s->now, NULL);
 	s->philo = ft_calloc(sizeof(t_philo), s->num_philo);
@@ -70,7 +90,7 @@ int	init_struct(t_structs *s, char **av)
 	if (!s->philo || !s->fork)
 		return (-1);
 	s->wait_threads = 0;
-	s->death = 0;
+	s->stop = 0;
 	return (0);
 }
 
@@ -101,8 +121,12 @@ int	main(int ac, char **av)
 		free_struct(&s);
 		return (-1);
 	}
-	create_mutex_init_philo(&s, av);
-	create_philo(&s);
+	create_mutex_init_philo(&s);
+	if (create_philo(&s) == -1)
+	{
+		free_struct(&s);
+		return (-1);
+	}
 	free_struct(&s);
 	return (0);
 }

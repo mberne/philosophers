@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:19:07 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/17 11:22:23 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/22 16:57:20 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdbool.h>
 # include <sys/time.h>
 # include <pthread.h>
 
@@ -35,9 +36,10 @@ typedef enum e_action
 
 typedef struct s_philo
 {
-	pthread_t			identifier;
-	int					index;
-	int					num_eat;
+	pthread_t			id;
+	size_t				index;
+	bool				stop;
+	size_t				dinner;
 	struct timeval		last_meal;
 	pthread_mutex_t		meal_protect;
 	struct s_structs	*s;
@@ -45,17 +47,18 @@ typedef struct s_philo
 
 struct s_structs
 {
-	int				num_philo;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
+	size_t			num_philo;
+	time_t			time_to_die;
+	time_t			time_to_eat;
+	time_t			time_to_sleep;
+	size_t			num_eat;
 	struct timeval	beginning;
 	struct timeval	now;
 	t_philo			*philo;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	speak;
-	int				wait_threads;
-	int				death;
+	bool			wait_threads;
+	bool			stop;
 };
 
 typedef struct s_structs	t_structs;
@@ -66,12 +69,13 @@ typedef struct s_structs	t_structs;
 int		main(int ac, char **av);
 int		check_args(int ac, char **av);
 int		init_struct(t_structs *s, char **av);
-void	create_mutex_init_philo(t_structs *s, char **av);
-void	create_philo(t_structs *s);
+void	create_mutex_init_philo(t_structs *s);
+int		create_philo(t_structs *s);
+void	free_struct(t_structs *s);
 
 //routine.c
 void	*routine(void *arg);
-int		synchro_threads_and_find_fork(t_philo *philo);
+size_t	synchro_threads_and_find_fork(t_philo *philo);
 void	wait_action(t_structs *s, int philo, t_action action, int action_time);
 void	print_status(t_structs *s, int philosopher, t_action action);
 void	wait_death(t_structs *s);
@@ -84,6 +88,5 @@ int		ft_atoi(const char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 void	*ft_calloc(size_t count, size_t size);
 int		str_isnumber(char *s);
-void	free_struct(t_structs *s);
 
 #endif

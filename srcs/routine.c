@@ -6,38 +6,11 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:47:04 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/22 17:09:40 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/25 15:45:54 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	wait_death(t_structs *s)
-{
-	size_t	i;
-	time_t	time_eat;
-
-	while (!s->stop)
-	{
-		i = 0;
-		while (i < s->num_philo)
-		{
-			gettimeofday(&s->now, NULL);
-			pthread_mutex_lock(&s->philo[i].meal_protect);
-			time_eat = (s->now.tv_usec / 1000 - s->philo[i].last_meal.tv_usec / 1000)
-					+ (s->now.tv_sec * 1000 - s->philo[i].last_meal.tv_sec * 1000);
-			pthread_mutex_unlock(&s->philo[i].meal_protect);
-			if (time_eat > s->time_to_die)
-			{
-				print_status(s, s->philo[i].index, DIE);
-				s->stop = 1;
-				pthread_mutex_unlock(&s->speak);
-				break ;
-			}
-			i++;
-		}
-	}
-}
 
 void	print_status(t_structs *s, int philo, t_action action)
 {
@@ -77,7 +50,10 @@ void	wait_action(t_structs *s, int philo, t_action action, int action_time)
 	gettimeofday(&start_time, NULL);
 	while (actual_time < action_time && !s->stop)
 	{
-		usleep(100);
+		if (s->num_philo > 125)
+			usleep(1000);
+		else
+			usleep(100);
 		actual_time = (s->now.tv_sec * 1000 - start_time.tv_sec * 1000);
 		actual_time += (s->now.tv_usec / 1000 - start_time.tv_usec / 1000);
 	}
@@ -103,7 +79,7 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 	second_fork = synchro_threads_and_find_fork(philo);
-	while (!philo->s->stop)
+	while (!philo->s->stop && philo->num_eat > 0)
 	{
 		pthread_mutex_lock(&philo->s->fork[philo->index - 1]);
 		print_status(philo->s, philo->index, TAKE_FORK);
@@ -119,6 +95,7 @@ void	*routine(void *arg)
 		pthread_mutex_unlock(&philo->s->fork[second_fork]);
 		wait_action(philo->s, philo->index, SLEEP, philo->s->time_to_sleep);
 		print_status(philo->s, philo->index, THINK);
+		philo->num_eat--;
 	}
 	return (NULL);
 }

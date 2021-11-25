@@ -6,7 +6,7 @@
 #    By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/10 15:30:20 by mberne            #+#    #+#              #
-#    Updated: 2021/11/14 19:06:10 by mberne           ###   ########lyon.fr    #
+#    Updated: 2021/11/25 15:46:42 by mberne           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,9 +27,9 @@ PATH_INC	=	include/
 #~~~~ Sources ~~~~#
  
 SRCS		=	main.c			\
+				philo_main.c	\
 				routine.c		\
-				num_utils.c		\
-				str_utils.c		\
+				libft_like.c	\
 
 #~~~~ Objects ~~~~#
 

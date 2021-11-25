@@ -1,6 +1,5 @@
-# Perso
 .vscode
 philo
-obj
+objs
 *.o
 *.a

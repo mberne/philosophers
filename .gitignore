@@ -1,5 +1,3 @@
 .vscode
-philo
-objs
-*.o
-*.a
+*/objs
+*/philo

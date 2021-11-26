@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:26:02 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/25 15:45:09 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/26 13:01:16 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,23 @@ int	init_struct(t_structs *s, char **av)
 int	check_args(int ac, char **av)
 {
 	size_t	i;
+	char	*tmp;
+	int		tmp_num;
 
 	if (ac < 5 || ac > 6)
 		return (-1);
 	i = 1;
 	while (av[i])
 	{
-		if (!str_isnumber(av[i]))
+		tmp_num = ft_atoi(av[i]);
+		tmp = ft_itoa(tmp_num);
+		if (tmp_num <= 0 || ft_strcmp(tmp, av[i]))
+		{
+			free(tmp);
 			return (-1);
+		}
+		free(tmp);
+		tmp = NULL;
 		i++;
 	}
 	return (0);

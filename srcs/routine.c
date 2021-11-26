@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 18:47:04 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/25 15:45:54 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/26 13:21:54 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	wait_action(t_structs *s, int philo, t_action action, int action_time)
 	gettimeofday(&start_time, NULL);
 	while (actual_time < action_time && !s->stop)
 	{
-		if (s->num_philo > 125)
+		if (s->num_philo > 150)
 			usleep(1000);
 		else
 			usleep(100);

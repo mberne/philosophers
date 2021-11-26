@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 16:38:59 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/25 15:41:28 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/26 12:55:26 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,6 @@ int	ft_strcmp(const char *s1, const char *s2)
 	while (s1[i] && (s1[i] == s2[i]))
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-}
-
-int	str_isnumber(char *s)
-{
-	while (*s)
-	{
-		if (!('0' <= *s && *s <= '9'))
-			return (0);
-		s++;
-	}
-	return (1);
 }
 
 static int	ft_intlen(long int n)

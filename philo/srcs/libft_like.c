@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 16:38:59 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/26 12:55:26 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/26 16:17:52 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*ft_itoa(int n)
 	int			j;
 
 	i = n;
-	j = ft_intlen(n) - 1;
+	j = ft_intlen(n);
 	result = malloc(sizeof(char) * ft_intlen(i) + 1);
 	if (!result)
 		return (NULL);
@@ -58,12 +58,12 @@ char	*ft_itoa(int n)
 	}
 	else if (i == 0)
 		result[0] = '0';
+	result[j--] = '\0';
 	while (i > 0)
 	{
 		result[j--] = i % 10 + '0';
 		i /= 10;
 	}
-	result[ft_intlen(n)] = '\0';
 	return (result);
 }
 

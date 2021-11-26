@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:26:02 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/26 13:01:16 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/26 16:56:51 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,28 @@ void	free_struct(t_structs *s)
 	free(s->philo);
 }
 
-void	create_mutex_init_philo(t_structs *s, char **av)
+int	create_mutex_init_philo(t_structs *s, char **av)
 {
 	size_t	i;
 
 	i = 0;
 	while (i < s->num_philo)
 	{
-		pthread_mutex_init(&s->fork[i], NULL);
+		if (pthread_mutex_init(&s->fork[i], NULL))
+			return (-1);
 		s->philo[i].index = i + 1;
 		if (av[5])
 			s->philo[i].num_eat = ft_atoi(av[5]);
 		else
 			s->philo[i].num_eat = INT32_MAX;
-		pthread_mutex_init(&s->philo[i].meal_protect, NULL);
+		if (pthread_mutex_init(&s->philo[i].meal_protect, NULL))
+			return (-1);
 		s->philo[i].s = s;
 		i++;
 	}
-	pthread_mutex_init(&s->speak, NULL);
+	if (pthread_mutex_init(&s->speak, NULL))
+		return (-1);
+	return (0);
 }
 
 int	init_struct(t_structs *s, char **av)
@@ -80,7 +84,7 @@ int	check_args(int ac, char **av)
 	{
 		tmp_num = ft_atoi(av[i]);
 		tmp = ft_itoa(tmp_num);
-		if (tmp_num <= 0 || ft_strcmp(tmp, av[i]))
+		if (tmp_num <= 0 || !tmp || ft_strcmp(tmp, av[i]))
 		{
 			free(tmp);
 			return (-1);
@@ -98,13 +102,12 @@ int	main(int ac, char **av)
 
 	if (check_args(ac, av) == -1)
 		return (-1);
-	if (init_struct(&s, av) == -1)
+	if (init_struct(&s, av) == -1 || create_mutex_init_philo(&s, av) == -1)
 	{
 		free(s.fork);
 		free(s.philo);
 		return (-1);
 	}
-	create_mutex_init_philo(&s, av);
 	if (create_philo(&s) == -1)
 	{
 		free_struct(&s);

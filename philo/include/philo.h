@@ -6,7 +6,7 @@
 /*   By: mberne <mberne@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 15:19:07 by mberne            #+#    #+#             */
-/*   Updated: 2021/11/26 13:22:00 by mberne           ###   ########lyon.fr   */
+/*   Updated: 2021/11/26 17:07:55 by mberne           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,12 @@ typedef struct s_structs	t_structs;
 int		main(int ac, char **av);
 int		check_args(int ac, char **av);
 int		init_struct(t_structs *s, char **av);
-void	create_mutex_init_philo(t_structs *s, char **av);
+int		create_mutex_init_philo(t_structs *s, char **av);
 void	free_struct(t_structs *s);
 
 //philo_main.c
 int		create_philo(t_structs *s);
+int		join_threads(t_structs *s, size_t num_threads);
 void	wait_death(t_structs *s);
 int		wait_dinners(t_structs *s);
 
